@@ -153,9 +153,11 @@
                 {% if user.is_authenticated %}
                 {% if trip.requested_by == user %}
                 <a href="{% url 'chat' trip.id %}" class="flex-button space-above" style="background:#ffffff; position:relative;">💬 Open Chat
-                    {% if unread_counts[trip.id] %}
-                    <span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ unread_counts[trip.id] }}</span>
+                    {% for key, val in unread_counts.items %}
+                    {% if key == trip.id|stringformat:"i" %}
+                    {% if val %}<span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ val }}</span>{% endif %}
                     {% endif %}
+                    {% endfor %}
                 </a>
                 <a href="{% url 'delete_trip' trip.id %}" class="flex-button space-above" 
                 style="background:#BB2528;" 
@@ -164,9 +166,11 @@
                 <button disabled class="flex-button space-above" style="opacity:0.5; cursor:not-allowed;">✓ Joined</button> 
                 <a href="{% url 'chat' trip.id %}" class="flex-button space-above" style="position:relative;">
                     💬 Open Chat
-                    {% if unread_counts[trip.id] %}
-                    <span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ unread_counts[trip.id] }}</span>
+                    {% for key, val in unread_counts.items %}
+                    {% if key == trip.id|stringformat:"i" %}
+                    {% if val %}<span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ val }}</span>{% endif %}
                     {% endif %}
+                    {% endfor %}
                 </a>
                 {% else %}
                 <a href="{% url 'join_trip' trip.id %}" class="flex-button space-above">Join Trip</a>
