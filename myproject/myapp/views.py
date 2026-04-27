@@ -56,7 +56,7 @@ def register(request):
                 messages.info(request, 'Email Already Used')
                 return redirect('register')
             else:
-                user = User.objects.create_user(username=username, password=password, email=email)
+                user = User.objects.create_user(username=email, password=password, email=email)
                 user.save()
                 return redirect('login')
         else:
