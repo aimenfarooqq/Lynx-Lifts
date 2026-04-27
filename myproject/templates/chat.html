@@ -144,7 +144,7 @@
         {% if user.driver %}
             <a href="{% url 'driver_dashboard' %}" class="back-link">← Back to Dashboard</a>
         {% else %}
-            <a href="/" class="back-link">← Back to Home</a>
+            <a href="{% url 'index' %}" class="back-link">← Back to Home</a>
         {% endif %}
     </div>
 </body>
