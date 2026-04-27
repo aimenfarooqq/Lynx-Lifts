@@ -62,7 +62,10 @@ def user_login(request):
         user = auth.authenticate(username=username, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect('/')
+            if hasattr(user, 'driver'):
+                return redirect('driver_dashboard')
+    else:
+        return redirect('index')
         else:
             messages.info(request, 'Invalid Credentials')
             return redirect('login')
