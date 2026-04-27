@@ -53,3 +53,11 @@ class TripPassenger(models.Model):
 
     def __str__(self):
         return f"{self.user.username} on {self.trip.name}"
+    
+class MessageRead(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    last_read = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ('user', 'trip')
