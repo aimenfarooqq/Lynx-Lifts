@@ -23,9 +23,9 @@ def index(request):
         for trip in trips:
             read = MessageRead.objects.filter(user=request.user, trip=trip).first()
             if read:
-                unread_counts[trip.id] = Message.objects.filter(trip=trip, timestamp__gt=read.last_read).count()
+                unread_counts[str(trip.id)] = Message.objects.filter(trip=trip, timestamp__gt=read.last_read).count()
             else:
-                unread_counts[trip.id] = Message.objects.filter(trip=trip).count()
+                unread_counts[str(trip.id)] = Message.objects.filter(trip=trip).count()
     return render(request, 'index.html', {
         'trips': trips,
         'joined_trip_ids': joined_trip_ids,
