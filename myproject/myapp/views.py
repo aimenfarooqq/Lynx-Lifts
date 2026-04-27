@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from .models import Trip, Driver, Message, TripPassenger
 from django.db import models
+from .models import Trip, Driver, Message, TripPassenger, MessageRead
 
 
 def index(request):
@@ -231,6 +232,10 @@ def chat(request, trip_id):
         return redirect('chat', trip_id=trip_id)
     messages_list = Message.objects.filter(trip=trip).order_by('timestamp')
     passengers = TripPassenger.objects.filter(trip=trip).select_related('user')
+    MessageRead.objects.update_or_create(
+    user=request.user, trip=trip,
+    defaults={'last_read': datetime.datetime.now()}
+    )
     return render(request, 'chat.html', {
         'trip': trip,
         'messages_list': messages_list,
