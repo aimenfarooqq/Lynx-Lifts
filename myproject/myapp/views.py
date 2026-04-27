@@ -1,4 +1,5 @@
 import datetime
+from urllib import request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
@@ -153,8 +154,16 @@ def user_post_trip(request):
         return redirect('login')
     if request.method == 'POST':
         name = request.POST['name']
+        import datetime
         date = request.POST['date']
         time = request.POST['time']
+        trip_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+        trip_time = datetime.datetime.strptime(time, "%H:%M").time()
+        now = datetime.datetime.now()
+        trip_datetime = datetime.datetime.combine(trip_date, trip_time)
+        if trip_datetime < now:
+            messages.error(request, "Cannot post a trip in the past.")
+            return redirect('post_trip')
         latitude = request.POST.get('latitude') or None
         longitude = request.POST.get('longitude') or None
         location_name = request.POST.get('location_name') or None
