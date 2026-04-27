@@ -152,13 +152,22 @@
                 {% else %}
                 {% if user.is_authenticated %}
                 {% if trip.requested_by == user %}
-                <a href="{% url 'chat' trip.id %}" class="flex-button space-above" style="background:#ffffff;">Open Chat</a>
+                <a href="{% url 'chat' trip.id %}" class="flex-button space-above" style="background:#ffffff; position:relative;">💬 Open Chat
+                    {% if unread_counts[trip.id] %}
+                    <span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ unread_counts[trip.id] }}</span>
+                    {% endif %}
+                </a>
                 <a href="{% url 'delete_trip' trip.id %}" class="flex-button space-above" 
                 style="background:#BB2528;" 
                 onclick="return confirm('Are you sure you want to delete this trip?')">Delete Trip</a>
                 {% elif trip.id in joined_trip_ids %}
                 <button disabled class="flex-button space-above" style="opacity:0.5; cursor:not-allowed;">✓ Joined</button> 
-                <a href="{% url 'chat' trip.id %}" class="flex-button space-above">Open Chat</a>
+                <a href="{% url 'chat' trip.id %}" class="flex-button space-above" style="position:relative;">
+                    💬 Open Chat
+                    {% if unread_counts[trip.id] %}
+                    <span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ unread_counts[trip.id] }}</span>
+                    {% endif %}
+                </a>
                 {% else %}
                 <a href="{% url 'join_trip' trip.id %}" class="flex-button space-above">Join Trip</a>
                 {% endif %}
