@@ -75,7 +75,7 @@ def user_login(request):
 
 def user_logout(request):
     auth.logout(request)
-    return redirect('/')
+    return redirect('choose')
 
 
 # ───── DRIVER AUTH ─────
@@ -123,7 +123,7 @@ def driver_login(request):
 
 def driver_logout(request):
     auth.logout(request)
-    return redirect('/')
+    return redirect('choose')
 
 
 # ───── DRIVER DASHBOARD ─────
@@ -224,7 +224,7 @@ def chat(request, trip_id):
     is_assigned_driver = is_driver and trip.accepted_by == request.user.driver
     is_passenger = TripPassenger.objects.filter(trip=trip, user=request.user).exists()
     if not (is_requester or is_assigned_driver or is_passenger):
-        return redirect('/')
+        return redirect('index')
     if request.method == 'POST':
         content = request.POST['content']
         Message.objects.create(trip=trip, sender=request.user, content=content)
