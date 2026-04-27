@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Trip, Driver, Message, TripPassenger
 from django.db import models
 from .models import Trip, Driver, Message, TripPassenger, MessageRead
+from django.core.mail import send_mail
 
 
 def index(request):
@@ -164,6 +165,13 @@ def accept_trip(request, trip_id):
     trip.accepted_by = request.user.driver
     trip.is_accepted = True
     trip.save()
+    # Notify the user
+    send_mail(
+    'Your Trip Has Been Accepted - Lynx Lifts', f'Great news! Your trip {trip.name} on {trip.date} at {trip.time} has been accepted by a driver. Login to see details!',
+    'lynxlifts.notify@gmail.com',
+    [trip.requested_by.email],
+    fail_silently=True,
+    )
     return redirect('driver_dashboard')
 
 
@@ -201,6 +209,14 @@ def user_post_trip(request):
         )
         TripPassenger.objects.create(trip=trip, user=request.user)
         messages.info(request, 'Trip request submitted! Waiting for a driver to accept.')
+        # Notify all drivers
+        # drivers = Driver.objects.all()
+        for driver in drivers:
+            send_mail(
+                'New Trip Request - Lynx Lifts',f'A new trip has been posted: {name} on {date} at {time}. Login to accept it!','lynxlifts.notify@gmail.com',
+                [driver.user.email],
+                fail_silently=True,
+                )
         return redirect('index')
     else:
         return render(request, 'post-trip.html')
