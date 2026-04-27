@@ -179,20 +179,21 @@ button:hover {
 
 .flex-button {
     background: #BB2528; 
-    color: white;
+    color: black;   /* was white → change to black */
     font-weight: bold;
-    font-size: 13px;   /* big text */
+    font-size: 13px;
     text-shadow: 1px 1px 2px black;
-    padding: 5px 15px;       /* more horizontal padding for pill shape */
+    padding: 5px 15px;
     border-radius: 25px;
     border: none;
-    cursor: pointer;            /* makes the cursor change when over button */
+    cursor: pointer;
 }
+
 .flex-button:hover {
     background: rgb(247, 207, 213);
     border: 1px solid black;
     border-radius: 25px;
-    color: black;
+    color: #FFD700;   /* golden yellow on hover */
     text-shadow: none;
 }
 
