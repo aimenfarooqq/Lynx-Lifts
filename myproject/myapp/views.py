@@ -57,6 +57,7 @@ def register(request):
                 return redirect('register')
             else:
                 user = User.objects.create_user(username=email, password=password, email=email)
+                user.first_name = username
                 user.save()
                 return redirect('login')
         else:
@@ -210,7 +211,7 @@ def user_post_trip(request):
         TripPassenger.objects.create(trip=trip, user=request.user)
         messages.info(request, 'Trip request submitted! Waiting for a driver to accept.')
         # Notify all drivers
-        # drivers = Driver.objects.all()
+        drivers = Driver.objects.all()
         for driver in drivers:
             send_mail(
                 'New Trip Request - Lynx Lifts',f'A new trip has been posted: {name} on {date} at {time}. Login to accept it!','lynxlifts.notify@gmail.com',
