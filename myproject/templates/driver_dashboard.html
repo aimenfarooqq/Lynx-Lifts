@@ -23,11 +23,22 @@
 {% for trip in my_trips %}
 <div>
     <p><strong>{{ trip.name }}</strong> — {{ trip.date }} at {{ trip.time }}</p>
-    <a href="{% url 'chat' trip.id %}">Open Chat</a>
+    <a href="{% url 'chat' trip.id %}">
+    💬 Open Chat
+    {% for key, val in unread_counts.items %}{% if key == trip.id|stringformat:"i" %}{% if val %}<span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:11px; margin-left:5px;">{{ val }}</span>{% endif %}{% endif %}{% endfor %}
+</a>
 </div>
 <hr>
 {% empty %}
 <p>No accepted trips yet.</p>
 {% endfor %}
+
+<script>
+    // Auto refresh every 30 seconds to update unread counts
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
+</script>
+
 </body>
 </html>
