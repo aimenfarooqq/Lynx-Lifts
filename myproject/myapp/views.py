@@ -18,12 +18,21 @@ def index(request):
             user=request.user).values_list('trip_id', flat=True)
         my_trips = Trip.objects.filter(requested_by=request.user, is_accepted=True)
         pending_trips = Trip.objects.filter(requested_by=request.user, is_accepted=False)
+    unread_counts = {}
+    if request.user.is_authenticated:
+        for trip in trips:
+            read = MessageRead.objects.filter(user=request.user, trip=trip).first()
+            if read:
+                unread_counts[trip.id] = Message.objects.filter(trip=trip, timestamp__gt=read.last_read).count()
+            else:
+                unread_counts[trip.id] = Message.objects.filter(trip=trip).count()
     return render(request, 'index.html', {
         'trips': trips,
         'joined_trip_ids': joined_trip_ids,
         'my_trips': my_trips,
-        'pending_trips': pending_trips
-    })
+        'pending_trips': pending_trips,
+        'unread_counts': unread_counts,
+})
 
 
 def choose(request):
