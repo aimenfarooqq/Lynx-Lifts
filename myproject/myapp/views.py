@@ -64,8 +64,8 @@ def user_login(request):
             auth.login(request, user)
             if hasattr(user, 'driver'):
                 return redirect('driver_dashboard')
-    else:
-        return redirect('index')
+            else:
+                return redirect('index')
         else:
             messages.info(request, 'Invalid Credentials')
             return redirect('login')
