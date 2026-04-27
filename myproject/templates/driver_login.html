@@ -1,0 +1,15 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="{% static 'styles.css' %}?v=5"></head>
+<body>
+<h1>Driver Login</h1>
+{% for message in messages %}<h5>{{message}}</h5>{% endfor %}
+<form method="POST">
+    {% csrf_token %}
+    <p>Full Name:</p><input type="text" name="username" />
+    <p>Password:</p><input type="password" name="password" />
+    <input type="submit" value="Login as Driver" />
+</form>
+</body>
+</html>

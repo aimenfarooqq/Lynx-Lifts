@@ -1,0 +1,108 @@
+{% load static %}
+<style>
+    body { background-color: white !important; }
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Post a Trip - Lynx Lifts</title>
+<link rel="stylesheet" href="{% static 'styles.css' %}?v=5">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    #map { height: 400px; width: 100%; margin-top: 10px; border-radius: 10px; }
+    #search-box { width: 100%; padding: 8px; margin-top: 5px; font-size: 16px; }
+    #location-display { margin-top: 8px; color: green; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>Post a New Trip</h1>
+{% for message in messages %}
+<h5>{{message}}</h5>
+{% endfor %}
+
+<form method="POST">
+    {% csrf_token %}
+    <p>Where do you want to go?</p>
+    <input type="text" name="name" required />
+
+    <p>Pick the Location:</p>
+    <input type="text" id="search-box" placeholder="Search for a place (e.g. Target, Memphis Zoo)..." />
+    <div id="map"></div>
+    <p id="location-display">📍 No location selected yet</p>
+
+    <input type="hidden" name="latitude" id="latitude" />
+    <input type="hidden" name="longitude" id="longitude" />
+    <input type="hidden" name="location_name" id="location_name" />
+
+    <p>Date:</p>
+    <input type="date" name="date" required />
+
+    <p>Time:</p>
+    <input type="time" name="time" required />
+
+    <br><br>
+    <input type="submit" value="Post Trip" />
+</form>
+
+<br>
+<a href="/">Back to Home</a>
+
+<script>
+    // Initialize map centered on Memphis/Rhodes College area
+    var map = L.map('map').setView([35.1495, -90.0490], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // Click on map to set location
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+        setMarker(lat, lng);
+
+        // Reverse geocode to get place name
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+            .then(res => res.json())
+            .then(data => {
+                var name = data.display_name || 'Selected Location';
+                document.getElementById('location_name').value = name;
+                document.getElementById('location-display').innerText = '📍 ' + name;
+            });
+    });
+
+    // Search box
+    document.getElementById('search-box').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            var query = this.value;
+            fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&viewbox=-90.2,35.0,-89.8,35.3&bounded=1`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lng = parseFloat(data[0].lon);
+                        var name = data[0].display_name;
+                        map.setView([lat, lng], 16);
+                        setMarker(lat, lng);
+                        document.getElementById('location_name').value = name;
+                        document.getElementById('location-display').innerText = '📍 ' + name;
+                    } else {
+                        alert('Location not found. Try a different search.');
+                    }
+                });
+        }
+    });
+
+    function setMarker(lat, lng) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+    }
+</script>
+</body>
+</html>

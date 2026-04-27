@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lynx Lifts - Login</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}?v=5">
+</head>
+<body>
+    <div class="main-header">
+        <h1>Lynx Lifts</h1>
+        <h2>Welcome! How would you like to continue?</h2>
+    </div>
+
+    <div style="text-align:center; margin-top: 50px;">
+        <h2>Already have an Account?</h2>
+        <br>
+        <a href="{% url 'login' %}" class="button">User Login</a>
+        <a href="{% url 'driver_login' %}" class="button">Driver Login</a>
+        <br><br><br>
+        <h2>New here?</h2>
+        <br>
+        <a href="{% url 'register' %}" class="button">Register as User</a>
+        <a href="{% url 'driver_register' %}" class="button">Register as Driver</a>
+    </div>
+</body>
+</html>

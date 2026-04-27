@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="{% static 'styles.css' %}?v=5">
+</head>
+<body>
+<h1>Sign Up Below</h1>
+<style>
+  #email-error {
+    color: red;
+    font-size: 0.85em;
+    display: none;
+  }
+</style>
+
+{% for message in messages %}
+<h5>{{message}}</h5>
+{% endfor %}
+
+<form method="POST" id="signup-form">
+    {% csrf_token %}
+    <p>Full Name:</p>
+    <input type="text" name="username" />
+    <p>Email:</p>
+    <input type="text" name="email" id="email" />
+    <span id="email-error">Only @rhodes.edu email addresses are allowed.</span>
+    <p>Password</p>
+    <input type="password" name="password" />
+    <p>Repeat Password</p>
+    <input type="password" name="password2" />
+    <input type="submit" />
+</form>
+
+<script>
+  const form = document.getElementById('signup-form');
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('email-error');
+
+  form.addEventListener('submit', function (e) {
+    const email = emailInput.value.trim();
+    if (!email.endsWith('@rhodes.edu')) {
+      e.preventDefault();
+      emailError.style.display = 'block';
+      emailInput.focus();
+    }
+  });
+
+  emailInput.addEventListener('input', function () {
+    if (emailInput.value.trim().endsWith('@rhodes.edu')) {
+      emailError.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>

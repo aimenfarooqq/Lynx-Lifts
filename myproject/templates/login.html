@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{% static 'styles.css' %}?v=5">
+</head>
+
+<body>
+<h1>Login Now</h1>
+
+<style>
+h3{
+    color: #BB2528;
+}
+</style>
+
+{% for message in messages %}
+<h3> {{message}}</h3>
+{% endfor %}
+<form method="POST">
+    {% csrf_token %}
+    <p>Full Name:</p>
+    <input type="text" name="username" />
+    <p>Password:</p>
+    <input type="password" name="password" />
+    <input type="submit" />
+</form>
+</body>
+</html>

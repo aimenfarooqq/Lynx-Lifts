@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat - {{ trip.name }}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}?v=5">
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .chat-header {
+            background-color: #BB2528;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .chat-header h2 {
+            margin: 0;
+            color: white;
+        }
+        .chat-header p {
+            margin: 5px 0 0 0;
+            color: rgb(247, 207, 213);
+            font-size: 14px;
+        }
+        .messages-box {
+            height: 400px;
+            overflow-y: scroll;
+            border: 3px solid black;
+            border-radius: 8px;
+            padding: 15px;
+            background: linear-gradient(135deg, #E6D8A8, #DCC87F, #C9B458);
+            margin-bottom: 15px;
+        }
+        .message {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        .message strong {
+            color: #BB2528;
+        }
+        .message small {
+            color: #888;
+            font-size: 12px;
+        }
+        .message-content {
+            margin-top: 5px;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 25px;
+            border: 2px solid black;
+            font-size: 14px;
+            font-family: Tahoma, sans-serif;
+        }
+        .chat-input button {
+            background: #BB2528;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .chat-input button:hover {
+            background: linear-gradient(135deg, #E6D8A8, #DCC87F, #C9B458);
+            color: #BB2528;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #E6D8A8, #DCC87F, #C9B458);
+            color: #BB2528;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            border: 2px solid black;
+        }
+        .back-link:hover {
+            background: #BB2528;
+            color: white;
+        }
+        .empty-msg {
+            color: #888;
+            text-align: center;
+            margin-top: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>💬 {{ trip.name }}</h2>
+            <p>📅 {{ trip.date }} &nbsp;|&nbsp; ⏰ {{ trip.time }}</p>
+            {% if trip.location_name %}
+            <p>📍 {{ trip.location_name }}</p>
+            {% endif %}
+            <p style="margin-top:10px; font-size:13px;">
+                👤 Posted by: <strong>{{ trip.requested_by.username }}</strong>
+                {% if trip.accepted_by %}
+                &nbsp;|&nbsp; 🚗 Driver: <strong>{{ trip.accepted_by.name }}</strong>
+                {% endif %}
+                {% if passengers %}
+                &nbsp;|&nbsp; 🧑‍🤝‍🧑 Passengers:
+                {% for p in passengers %}
+                    <strong>{{ p.user.username }}</strong>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="messages-box">
+            {% for message in messages_list %}
+            <div class="message">
+                <strong>{{ message.sender.username }}</strong>
+                <small>({{ message.timestamp }})</small>
+                <div class="message-content">{{ message.content }}</div>
+            </div>
+            {% empty %}
+            <p class="empty-msg">No messages yet. Start the conversation!</p>
+            {% endfor %}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="chat-input">
+                <input type="text" name="content" placeholder="Type a message..." required />
+                <button type="submit">Send 🚗</button>
+            </div>
+        </form>
+
+        {% if user.driver %}
+            <a href="{% url 'driver_dashboard' %}" class="back-link">← Back to Dashboard</a>
+        {% else %}
+            <a href="/" class="back-link">← Back to Home</a>
+        {% endif %}
+    </div>
+</body>
+</html>

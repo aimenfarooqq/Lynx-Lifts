@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="{% static 'styles.css' %}?v=5"></head>
+<body>
+<h1>Driver Dashboard</h1>
+<a href="{% url 'driver_post_trip' %}">Post a New Trip</a>
+<a href="{% url 'driver_logout' %}">Logout</a>
+
+<h2>Pending Trip Requests</h2>
+{% for trip in pending_trips %}
+<div>
+    <p><strong>{{ trip.name }}</strong> — {{ trip.date }} at {{ trip.time }}</p>
+    <p>Requested by: {{ trip.requested_by.username }}</p>
+    <a href="{% url 'accept_trip' trip.id %}">Accept Trip</a>
+</div>
+<hr>
+{% empty %}
+<p>No pending trips.</p>
+{% endfor %}
+
+<h2>My Accepted Trips</h2>
+{% for trip in my_trips %}
+<div>
+    <p><strong>{{ trip.name }}</strong> — {{ trip.date }} at {{ trip.time }}</p>
+    <a href="{% url 'chat' trip.id %}">Open Chat</a>
+</div>
+<hr>
+{% empty %}
+<p>No accepted trips yet.</p>
+{% endfor %}
+</body>
+</html>
