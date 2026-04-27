@@ -143,9 +143,17 @@ def driver_dashboard(request):
         return redirect('driver_login')
     pending_trips = Trip.objects.filter(is_accepted=False)
     my_trips = Trip.objects.filter(accepted_by=request.user.driver)
+    unread_counts = {}
+    for trip in my_trips:
+        read = MessageRead.objects.filter(user=request.user, trip=trip).first()
+        if read:
+            unread_counts[str(trip.id)] = Message.objects.filter(trip=trip, timestamp__gt=read.last_read).count()
+        else:
+            unread_counts[str(trip.id)] = Message.objects.filter(trip=trip).count()
     return render(request, 'driver_dashboard.html', {
         'pending_trips': pending_trips,
-        'my_trips': my_trips
+        'my_trips': my_trips,
+        'unread_counts': unread_counts,
     })
 
 
