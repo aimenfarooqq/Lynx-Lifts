@@ -110,7 +110,7 @@ def driver_register(request):
         if User.objects.filter(email=email).exists():
             messages.info(request, 'Email Already Used')
             return redirect('driver_register')
-        user = User.objects.create_user(username=username, password=password, email=email)
+        user = User.objects.create_user(username=email, password=password, email=email)
         user.save()
         Driver.objects.create(user=user, name=name, car_model=car_model, license_plate=license_plate)
         return redirect('driver_login')
