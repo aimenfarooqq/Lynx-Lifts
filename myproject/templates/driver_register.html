@@ -7,6 +7,7 @@
 {% for message in messages %}<h5>{{message}}</h5>{% endfor %}
 <form method="POST">
     {% csrf_token %}
+    <p>Full Name:</p><input type="text" name="username" />
     <p>Driver Name (displayed to passengers):</p><input type="text" name="name" />
     <p>Email:</p><input type="text" name="email" />
     <p>Car Model:</p><input type="text" name="car_model" />
