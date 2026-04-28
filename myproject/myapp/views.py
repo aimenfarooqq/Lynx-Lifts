@@ -215,12 +215,18 @@ def user_post_trip(request):
         messages.info(request, 'Trip request submitted! Waiting for a driver to accept.')
         # Notify all drivers
         drivers = Driver.objects.all()
-        for driver in drivers:
-            send_mail(
-                'New Trip Request - Lynx Lifts',f'A new trip has been posted: {name} on {date} at {time}. Login to accept it!','lynxlifts.notify@gmail.com',
-                [driver.user.email],
-                fail_silently=True,
+        try:
+            drivers = Driver.objects.all()
+            driver_emails = [driver.user.email for driver in drivers]
+            if driver_emails:
+                send_mail(
+                    'New Trip Request - Lynx Lifts',
+                    f'A new trip has been posted: {name} on {date} at {time}. Login to accept it!','lynxlifts.notify@gmail.com',
+                    driver_emails,
+                    fail_silently=True,
                 )
+        except:
+            pass
         return redirect('index')
     else:
         return render(request, 'post-trip.html')
