@@ -173,7 +173,7 @@ def accept_trip(request, trip_id):
         f'Great news! Your trip {trip.name} on {trip.date} at {trip.time} has been accepted by a driver. Login to see details!',
         'lynxlifts.notify@gmail.com',
         [trip.requested_by.email],
-        fail_silently=False,
+        fail_silently=True,
     )
     print("Email sent successfully")
     return redirect('driver_dashboard')
@@ -213,20 +213,6 @@ def user_post_trip(request):
         )
         TripPassenger.objects.create(trip=trip, user=request.user)
         messages.info(request, 'Trip request submitted! Waiting for a driver to accept.')
-        # Notify all drivers
-        drivers = Driver.objects.all()
-        try:
-            drivers = Driver.objects.all()
-            driver_emails = [driver.user.email for driver in drivers]
-            if driver_emails:
-                send_mail(
-                    'New Trip Request - Lynx Lifts',
-                    f'A new trip has been posted: {name} on {date} at {time}. Login to accept it!','lynxlifts.notify@gmail.com',
-                    driver_emails,
-                    fail_silently=True,
-                )
-        except:
-            pass
         return redirect('index')
     else:
         return render(request, 'post-trip.html')
