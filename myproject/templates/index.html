@@ -81,7 +81,7 @@
         - [ ] Any time between / after
         --> 
         {% if user.is_authenticated %}
-        <h4 style="color:#BB2528">Welcome, {{user.username}}!</h4>
+        <h4 style="color:#BB2528">Welcome, {{user.first_name|default:user.username}}!</h4>
         {% endif %}
         {% if user.is_authenticated %}
         {% if pending_trips %}
