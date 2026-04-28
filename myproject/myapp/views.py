@@ -171,7 +171,7 @@ def accept_trip(request, trip_id):
     'Your Trip Has Been Accepted - Lynx Lifts', f'Great news! Your trip {trip.name} on {trip.date} at {trip.time} has been accepted by a driver. Login to see details!',
     'lynxlifts.notify@gmail.com',
     [trip.requested_by.email],
-    fail_silently=True,
+    fail_silently=False,
     )
     return redirect('driver_dashboard')
 
