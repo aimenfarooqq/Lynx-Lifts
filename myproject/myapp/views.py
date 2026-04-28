@@ -167,12 +167,15 @@ def accept_trip(request, trip_id):
     trip.is_accepted = True
     trip.save()
     # Notify the user
+    print(f"Sending email to: {trip.requested_by.email}")
     send_mail(
-    'Your Trip Has Been Accepted - Lynx Lifts', f'Great news! Your trip {trip.name} on {trip.date} at {trip.time} has been accepted by a driver. Login to see details!',
-    'lynxlifts.notify@gmail.com',
-    [trip.requested_by.email],
-    fail_silently=False,
+        'Your Trip Has Been Accepted - Lynx Lifts',
+        f'Great news! Your trip {trip.name} on {trip.date} at {trip.time} has been accepted by a driver. Login to see details!',
+        'lynxlifts.notify@gmail.com',
+        [trip.requested_by.email],
+        fail_silently=False,
     )
+    print("Email sent successfully")
     return redirect('driver_dashboard')
 
 
